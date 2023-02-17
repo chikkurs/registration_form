@@ -1,0 +1,119 @@
+{% load static %}
+{% block body %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block tittle %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">COLLAGE STORE</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#"><h5 class="text-align:center">Welcome {{user.username}}</h5></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'taskapp:logout' %}" >Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="details">
+    <form method="post">
+        {% csrf_token %}
+        <div class="det">
+            <h1 align="center">
+                Details
+            </h1>
+        </div>
+<div>
+    {{form.as_p}}
+</div>
+        <div  class="container">
+
+            <button type="reset" class="but" style="width:250px" onclick="openPopup()">SUBMIT</button>
+        </div>
+        <div class="popup" id="popup">
+            <h6>Details Submitted Successfully </h6>
+            <h5>Thank You !!</h5>
+            <div>
+                <button><a class="home" href="{% url 'taskapp:home' %}" >Home</a></button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    let popup=document.getElementById("popup");
+    function openPopup(){
+    popup.classList.add("open-popup");
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" ></script>
+<script>
+    {% comment %} $("#id_department").change(function () {
+        const url = $("#personForm").attr("data-branches-url");  // get the url of the `load_branches` view
+        const departmentId = $(this).val();  // get the selected country ID from the HTML input
+        $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+            data: {
+                department': departmentId       // add the country id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+                $("#id_branch").html(data);  // replace the contents of the city input with the data that came from the server
+                /*
+                let html_data = '<option value="">--------</option>';
+                data.forEach(function (branch) {
+                    html_data += `<option value="${branch.id}">${branch.name}</option>`
+                });
+                console.log(html_data);
+                $("#id_branch").html(html_data);
+                */
+            }
+        });
+    }); {% endcomment %}
+    let department = document.getElementById('id_department')
+    let branch = document.getElementById('id_branch')
+    department.addEventListener('change',(e)=>{
+      ChooseOption()
+    })
+    function ChooseOption(){
+      let options=""
+      let department_id = document.getElementById('id_department').value
+       $.ajax({
+          url: "/getbranch",
+          type: "GET",
+          data:{id:department_id},
+          success: function (data){
+              for(let i =0;i<data.data.length;i++){
+                options+=`<option value="${data.data[i]}">${data.data[i]}</option>`
+              }
+              branch.innerHTML=options
+          },
+          error: function (err) {
+             alert(err);
+          },
+      });
+  }
+</script>
+{% endblock %}
+
